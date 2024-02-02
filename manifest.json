@@ -1,0 +1,19 @@
+{
+  "platform-version": "3.0",
+  "modules": {
+    "common": {
+      "location": {
+        "ticket_sidebar": {
+          "url": "index.html",
+          "icon": "styles/images/icon.svg"
+        }
+      },
+      "requests": {}
+    },
+    "support_ticket": {}
+  },
+  "engines": {
+    "node": "18.19.0",
+    "fdk": "9.1.0"
+  }
+}
