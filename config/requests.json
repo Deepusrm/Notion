@@ -1,0 +1,74 @@
+{
+    "createPage": {
+        "schema": {
+            "method": "POST",
+            "host": "api.notion.com",
+            "path": "/v1/pages",
+            "headers": {
+                "Authorization": "Bearer <%=iparam.api_key%>",
+                "Content-Type": "application/json",
+                "Notion-version": "2022-06-28"
+            }
+        }
+    },
+    "appendToExistingPage": {
+        "schema": {
+            "method": "PATCH",
+            "host": "api.notion.com",
+            "path": "/v1/blocks/<%=context.page_id%>/children",
+            "headers": {
+                "Authorization": "Bearer <%=iparam.api_key%>",
+                "Content-Type": "application/json",
+                "Notion-version": "2022-06-28"
+            }
+        }
+    },
+    "getPageBlocks": {
+        "schema": {
+            "method": "GET",
+            "host": "api.notion.com",
+            "path": "/v1/blocks/<%=context.page_id%>/children",
+            "headers": {
+                "Authorization": "Bearer <%=iparam.api_key%>",
+                "Content-Type": "application/json",
+                "Notion-version": "2022-06-28"
+            }
+        }
+    },
+    "getBlock": {
+        "schema": {
+            "method": "GET",
+            "host": "api.notion.com",
+            "path": "/v1/blocks/<%=context.block_id%>",
+            "headers": {
+                "Authorization": "Bearer <%=iparam.api_key%>",
+                "Content-Type": "application/json",
+                "Notion-version": "2022-06-28"
+            }
+        }
+    },
+    "deleteBlock": {
+        "schema": {
+            "method": "DELETE",
+            "host": "api.notion.com",
+            "path": "/v1/blocks/<%=context.block_id%>",
+            "headers": {
+                "Authorization": "Bearer <%=iparam.api_key%>",
+                "Content-Type": "application/json",
+                "Notion-version": "2022-06-28"
+            }
+        }
+    },
+    "updateBlock": {
+        "schema": {
+            "method": "PATCH",
+            "host": "api.notion.com",
+            "path": "/v1/blocks/<%=context.block_id%>",
+            "headers": {
+                "Authorization": "Bearer <%=iparam.api_key%>",
+                "Content-Type": "application/json",
+                "Notion-version": "2022-06-28"
+            }
+        }
+    }
+}

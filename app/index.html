@@ -1,23 +1,52 @@
 <!DOCTYPE html>
-
 <html lang="en">
-  <head>
-    <title>A Template App</title>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script async src="{{{appclient}}}"></script>
-    <link rel="stylesheet" type="text/css" href="styles/style.css" />
-  </head>
 
-  <body>
-    <div class="main">
-      <p>Utilize this template code to build your App</p>
-      <p id="apptext"></p>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Name</title>
+
+  <!-- Crayons CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/css/crayons-min.css">
+  <link rel="stylesheet" href="./styles/css/loader.css">
+
+  <!-- Crayons JavaScript -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.esm.js"></script>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.js"></script>
+  <style>
+    fw-button {
+      margin-bottom: 5px;
+      width: 100%;
+    }
+
+    #deleteNoteField {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app-container">
+    <!-- Form for capturing user inputs -->
+    <img src="" />
+    <h1>Note Actions</h1>
+    <fw-button-group>
+      <fw-button id="viewButton" color="primary">View Note</fw-button>
+      <fw-button id="createButton" color="secondary">Create Note</fw-button>
+      <fw-button id="deleteButton" color="danger">Delete Note</fw-button>
+    </fw-button-group>
+
+    <div id="deleteNoteField">
+      <fw-input type="text" label="Enter NoteID" placeholder="Enter NoteID to delete" required></fw-input>
+      <fw-button color="danger">Delete</fw-button>
     </div>
-  </body>
 
+  </div>
+  <!-- Linking app.js file -->
+  <script defer src="https://static.freshdev.io/fdk/2.0/assets/fresh_client.js"></script>
+  <script defer src="scripts/utilities.js"></script>
   <script defer src="scripts/app.js"></script>
-  <script async type="module" src="https://unpkg.com/@freshworks/crayons@3/dist/crayons/crayons.esm.js"></script>
-  <script async nomodule src="https://unpkg.com/@freshworks/crayons@3/dist/crayons/crayons.js"></script>
+</body>
+
 </html>

@@ -2,16 +2,47 @@
   "platform-version": "3.0",
   "modules": {
     "common": {
+      "requests": {
+        "createPage": {},
+        "appendToExistingPage":{},
+        "getPageBlocks":{},
+        "getBlock":{},
+        "deleteBlock":{},
+        "updateBlock":{}
+      },
+      "functions":{
+        "createNote":{
+          "timeout":20
+        },
+        "appendNote":{
+          "timeout":20
+        },
+        "deleteNote":{
+          "timeout":20
+        }
+      }
+    },
+    "support_ticket": {
       "location": {
         "ticket_sidebar": {
           "url": "index.html",
-          "icon": "styles/images/icon.svg"
+          "icon": "styles/images/notion.svg"
         }
       },
-      "requests": {}
+      "events": {}
     },
-    "support_ticket": {}
+    "service_ticket": {
+      "location": {
+        "ticket_sidebar": {
+          "url": "index.html",
+          "icon": "styles/images/notion.svg"
+        }
+      },
+      "events": {}
+    }
   },
+  "name":"Notion",
+  "description":"An app to take notes related to the ticket",
   "engines": {
     "node": "18.19.0",
     "fdk": "9.1.0"
