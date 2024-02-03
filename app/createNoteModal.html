@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Name</title>
+
+    <!-- Crayons CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/css/crayons-min.css">
+    <link rel="stylesheet" href="./styles/css/loader.css">
+
+    <!-- Crayons JavaScript -->
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.js"></script>
+    <style>
+        fw-button {
+            margin-bottom: 5px;
+            width: 100%;
+        }
+
+        #deleteNoteField {
+            display: none;
+        }
+
+        h3 {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <fw-toast id="modalToast" position="center"></fw-toast>
+    <fw-form>
+        <fw-select label="Note type" placeholder="Choose the note type" id="noteType">
+            <fw-select-option value="1">Todo list</fw-select-option>
+            <fw-select-option value="2">Notes</fw-select-option>
+        </fw-select>
+        <fw-input label="Enter note title" placeholder="Enter note title" required id="noteTitle"></fw-input>
+        <br>
+        <fw-textarea label="Enter note content" placeholder="Enter note content" required
+            id="noteContent"></fw-textarea>
+        <br>
+        <br>
+        <fw-button-group>
+            <fw-button color="primary" id="create">Create</fw-button>
+            <fw-button color="secondary" id="back">Back</fw-button>
+        </fw-button-group>
+        <div id="loader" class="loader"></div>
+    </fw-form>
+    <script defer src="https://static.freshdev.io/fdk/2.0/assets/fresh_client.js"></script>
+    <script defer src="scripts/utilities.js"></script>
+    <script defer src="scripts/createNoteModal.js"></script>
+</body>

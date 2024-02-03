@@ -27,18 +27,14 @@ async function setupApp() {
   const viewButton = document.getElementById('viewButton');
 
   createButton.addEventListener('click',async()=>{
-    const response = await client.request.invoke('createNote',{});
     await client.interface.trigger('showModal',{
       template:'./createNoteModal.html'
     })
-    console.log(response.response);
   })
 
   viewButton.addEventListener('click',async()=>{
-    const response = await client.request.invoke('appendNote',{})
     await client.interface.trigger('showModal',{
       template:'./viewModal.html'
     })
-    console.log(response.response);
   })
 }

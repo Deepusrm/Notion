@@ -23,6 +23,10 @@
     #deleteNoteField {
       display: none;
     }
+
+    h3 {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
   </style>
 </head>
 
@@ -30,12 +34,11 @@
   <div id="app-container">
     <!-- Form for capturing user inputs -->
     <img src="" />
-    <h1>Note Actions</h1>
-    <fw-button-group>
-      <fw-button id="viewButton" color="primary">View Note</fw-button>
-      <fw-button id="createButton" color="secondary">Create Note</fw-button>
-      <fw-button id="deleteButton" color="danger">Delete Note</fw-button>
-    </fw-button-group>
+    <h3>Welcome to notion!</h3>
+    <fw-button id="viewButton" color="primary">View Note</fw-button><br><br>
+    <fw-button id="createButton" color="secondary">Create Note</fw-button><br><br>
+    <fw-button id="deleteButton" color="danger">Delete Note</fw-button><br><br>
+
 
     <div id="deleteNoteField">
       <fw-input type="text" label="Enter NoteID" placeholder="Enter NoteID to delete" required></fw-input>
