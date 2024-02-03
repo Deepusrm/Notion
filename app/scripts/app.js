@@ -23,18 +23,46 @@ async function setupApp() {
   console.log('Ticket id is : ' + ticket_id);
   const createButton = document.getElementById('createButton');
   // const editButton = document.getElementById('editButton');
-  // const deleteButton = document.getElementById('deleteButton');
+  const deleteButton = document.getElementById('deleteButton');
   const viewButton = document.getElementById('viewButton');
 
-  createButton.addEventListener('click',async()=>{
-    await client.interface.trigger('showModal',{
-      template:'./createNoteModal.html'
+  createButton.addEventListener('click', async () => {
+    await client.interface.trigger('showModal', {
+      template: './createNoteModal.html'
     })
   })
 
-  viewButton.addEventListener('click',async()=>{
-    await client.interface.trigger('showModal',{
-      template:'./viewModal.html'
+  deleteButton.addEventListener('click', deleteNote);
+
+  viewButton.addEventListener('click', async () => {
+    await client.interface.trigger('showModal', {
+      template: './viewModal.html'
     })
+  })
+}
+
+async function deleteNote() {
+  document.getElementById('cta_buttons').style.display = "none";
+  document.getElementById('deleteNoteField').style.display = "block";
+
+  document.getElementById('delete').addEventListener('click', async () => {
+    document.getElementById('loader').style.display = "block";
+    const noteId = document.getElementById('noteId').value;
+
+    try {
+      const response = await client.request.invoke('deleteNote', { ticketId: ticket_id, note_id: noteId });
+      if (response.response === 'Note deleted successfully!') {
+        document.getElementById('loader').style.display = "none";
+        document.getElementById('cta_buttons').style.display = "block";
+        document.getElementById('deleteNoteField').style.display = "none";
+        await showNotifications(response.response, 'success');
+      } else {
+        document.getElementById('loader').style.display = "none";
+        await showNotifications(response.response, 'danger');
+      }
+    } catch (error) {
+      document.getElementById('loader').style.display = "none";
+      await showNotifications(error.message,'danger');
+    }
   })
 }

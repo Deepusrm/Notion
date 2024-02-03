@@ -42,30 +42,60 @@ exports = {
 
     appendNote: async function (args) {
         const pageId = await $db.get(`ticket-${args.data.ticket_id}`);
-        const [childBlock,noteId] = payloadUtils.childBlock(args.data.noteTitle);
+        const [childBlock, noteId] = payloadUtils.childBlock(args.data.noteTitle);
 
-        payloadUtils.appendBlock(childBlock,args);
+        payloadUtils.appendBlock(childBlock, args);
 
         try {
-            const results = await $request.invokeTemplate('appendToExistingPage',{
-                context:{page_id:pageId["ticket"]["PageId"]},
-                body:JSON.stringify(childBlock)
+            const results = await $request.invokeTemplate('appendToExistingPage', {
+                context: { page_id: pageId["ticket"]["PageId"] },
+                body: JSON.stringify(childBlock)
             });
             const blockIds = utils.returnBlockIds(results);
 
             let note = `ticket.Notes[${noteId}]`;
-            await $db.update(`ticket-${args.data.ticket_id}`,'set',{[note]:blockIds},{setIf:"exist"});
+            await $db.update(`ticket-${args.data.ticket_id}`, 'set', { [note]: blockIds }, { setIf: "exist" });
             console.log('DB updated successfully');
-            renderData(null,'Note added successfully!');
+            renderData(null, 'Note added successfully!');
         } catch (error) {
             console.error(error);
             const customError = new Error(error.message);
-            renderData(customError,null);
+            renderData(customError, null);
         }
 
     },
-    deleteNote: async function () {
-        console.log('Vanakkam da mapla..blore lendhu')
-        renderData(null, 'Vanakkam da mapla..blore lendhu');
+
+
+    deleteNote: async function (id) {
+        console.log('delete function entered')
+        try {
+            const ticket = await $db.get(`ticket-${id.ticketId}`);
+            console.log(ticket);
+            const noteId = id.note_id;
+            console.log(noteId)
+            const noteBlocks = ticket.ticket["Notes"][noteId];
+
+            console.log(noteBlocks);
+            if (!Array.isArray(noteBlocks)) {
+                renderData(null, "Note doesn't exist");
+                return;
+            }
+
+            for (const block of noteBlocks) {
+                await $request.invokeTemplate('deleteBlock', {
+                    context: { block_id: block }
+                })
+            }
+            console.log("Note deleted successfully!");
+            const notePath = "ticket.Notes." + id.note_id;
+            await $db.update(`ticket-${id.ticketId}`, "remove", [notePath], { setIf: "exist" });
+            console.log("Note removed successfully from the db");
+            renderData(null, 'Note deleted successfully!');
+        } catch (error) {
+            console.error(error);
+            const customError = new Error(error.message, null);
+            renderData(customError, null);
+        }
+
     }
 }
