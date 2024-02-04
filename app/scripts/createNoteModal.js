@@ -68,7 +68,7 @@ async function createNote() {
             }
 
         } else {
-            showToast(responseData.response,'error');
+            showToast(error.message,'error');
             document.getElementById('loader').style.display = "none";
             console.error(error);
         }
