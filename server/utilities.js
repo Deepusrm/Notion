@@ -31,3 +31,50 @@ exports.returnBlockIds = function(payload){
 
     return blockIds;
 }
+
+exports.returnNoteData = async function(payload){
+    const noteData = [];
+
+    payload["results"].forEach((element) =>{
+        const note = {
+            "type":"",
+            "content":"",
+            "id":""
+        }
+        if(element['type'] === 'heading_3'){
+            note.type = 'heading_3';
+            note.id = element.id;
+            note.content = element['heading_3']['rich_text'][0]['text']['content'];
+
+            noteData.push(note);
+        }else if(element['type'] === 'paragraph'){
+            if(!element['paragraph']['rich_text'][0]['text']['content'].startsWith('note id :')){
+                note.type = 'paragraph';
+                note.id = element.id;
+                note.content = element['paragraph']['rich_text'][0]['text']['content'];
+
+                noteData.push(note);
+            }
+        }else if(element['type'] === 'to_do'){
+            note.type = 'to_do';
+            note.id = element.id;
+            note.content = element['to_do']['rich_text'][0]['text']['content'];
+
+            noteData.push(note);
+        }else if(element['type'] === 'numbered_list_item'){
+            note.type = 'numbered_list_item';
+            note.id = element.id;
+            note.content = element['numbered_list_item']['rich_text'][0]['text']['content'];
+
+            noteData.push(note);
+        }else if(element['type'] === 'divider'){
+            note.type = 'divider';
+            note.id = element.id;
+            note.content = null;
+
+            noteData.push(note);
+        }
+    })
+
+    return noteData;
+}

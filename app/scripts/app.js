@@ -36,7 +36,7 @@ async function setupApp() {
 
   viewButton.addEventListener('click', async () => {
     await client.interface.trigger('showModal', {
-      template: './viewModal.html'
+      template: './viewNoteModal.html'
     })
   })
 }

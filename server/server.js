@@ -97,5 +97,26 @@ exports = {
             renderData(customError, null);
         }
 
+    },
+
+    getNotes: async function (id) {
+        try {
+            const ticket = await $db.get(`ticket-${id.id}`);
+            const pageId = ticket.ticket.PageId;
+
+            const response = await $request.invokeTemplate('getPageBlocks', {
+                context: { page_id: pageId }
+            })
+
+            const results = JSON.parse(response.response);
+
+            const blockData = await utils.returnNoteData(results);
+            renderData(null, blockData);
+
+        } catch (error) {
+            console.error(error);
+            const customError = new Error(error.message);
+            renderData(customError,null);
+        }
     }
 }
