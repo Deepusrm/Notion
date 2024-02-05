@@ -1,5 +1,5 @@
 const utils = require('./utilities');
-exports.parentBlock = function (id) {
+exports.parentBlock = function (id,product) {
     const parentJSON = {
         parent: {
             type: "database_id",
@@ -10,7 +10,7 @@ exports.parentBlock = function (id) {
                 title: [{
                     type: "text",
                     text: {
-                        content: "TICKET -" + id
+                        content: "TICKET -" + id + `(${product})`
                     }
                 }]
             }
