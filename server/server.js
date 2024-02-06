@@ -41,7 +41,7 @@ exports = {
     },
 
     appendNote: async function (args) {
-        const pageId = await $db.get(`ticket-${args.data.ticket_id}`);
+        const pageId = await $db.get(`ticket-${args.data.ticket_id} (${args.data.product})`);
         const [childBlock, noteId] = payloadUtils.childBlock(args.data.noteTitle);
 
         payloadUtils.appendBlock(childBlock, args);
@@ -53,7 +53,7 @@ exports = {
             });
             const blockIds = utils.returnBlockIds(results);
 
-            let note = `ticket.Notes[${noteId}]`;
+            let note = "ticket.Notes."+noteId;
             await $db.update(`ticket-${args.data.ticket_id} (${args.data.product})`, 'set', { [note]: blockIds }, { setIf: "exist" });
             console.log('DB updated successfully');
             renderData(null, 'Note added successfully!');
