@@ -41,10 +41,10 @@ async function viewNotes() {
             const heading_3 = `<div class="fw-type-h3">${element.content}</div><br>`;
             noteContainer.insertAdjacentHTML('beforeend', heading_3);
         } else if (element.type === 'paragraph') {
-            const paragraph = `<p>${element.content}</p>`;
+            const paragraph = `<p class="fw-text-normal fw-text-grey-900">${element.content}</p>`;
             noteContainer.insertAdjacentHTML('beforeend', paragraph);
         } else if (element.type === 'to_do') {
-            const todo = `<input type="checkbox" />  ${element.content} <br>`;
+            const todo = `<fw-checkbox>${element.content}</fw-checkbox> <br><br>`;
             noteContainer.insertAdjacentHTML('beforeend', todo);
         } else if (element.type === 'numbered_list_item') {
             const list = `<li>${element.content}</li>`
