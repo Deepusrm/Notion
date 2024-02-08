@@ -22,7 +22,7 @@ async function viewNotes() {
     ticketHeading.innerHTML = `Ticket - ${ticket_id}`;
     let noteData;
     try {
-        noteData = await client.request.invoke('getNotes', { id: ticket_id , product_name: product});
+        noteData = await client.request.invoke('getNotes', { id: ticket_id, product_name: product });
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
         if (error.message === 'Record not found')
@@ -37,22 +37,32 @@ async function viewNotes() {
         showToast('Page is empty! please add a note!', 'error');
     }
     noteData.response.forEach((element) => {
+        let content = document.createElement('div');
+        content.className = "content";
+        const button = `<fw-button color="secondary" size="icon">
+            <fw-icon slot="before-label" size="16" name="delete" data-block-id="${element.id}"></fw-icon>
+          </fw-button>`;
         if (element.type === 'heading_3') {
             const heading_3 = `<div class="fw-type-h3">${element.content}</div><br>`;
-            noteContainer.insertAdjacentHTML('beforeend', heading_3);
+            content.insertAdjacentHTML('beforeend', heading_3);
         } else if (element.type === 'paragraph') {
             const paragraph = `<p class="fw-text-normal fw-text-grey-900">${element.content}</p>`;
-            noteContainer.insertAdjacentHTML('beforeend', paragraph);
+            content.insertAdjacentHTML('beforeend', paragraph);
+            content.insertAdjacentHTML('beforeend', button);
         } else if (element.type === 'to_do') {
             const todo = `<fw-checkbox>${element.content}</fw-checkbox> <br><br>`;
-            noteContainer.insertAdjacentHTML('beforeend', todo);
+            content.insertAdjacentHTML('beforeend', todo);
+            content.insertAdjacentHTML('beforeend',button);
         } else if (element.type === 'numbered_list_item') {
             const list = `<li>${element.content}</li>`
-            noteContainer.insertAdjacentHTML('beforeend', list);
+            content.insertAdjacentHTML('beforeend', list);
+            content.insertAdjacentHTML('beforeend',button);
         } else if (element.type === 'divider') {
             const horizontal_line = document.createElement('hr');
-            noteContainer.appendChild(horizontal_line);
+            content.appendChild(horizontal_line);
         }
+
+        noteContainer.appendChild(content);
     });
 
     document.getElementById('loader').style.display = 'none';
