@@ -3,7 +3,7 @@ const utils = require('./utilities');
 exports = {
     createNote: async function (args) {
         const parentBlock = payloadUtils.parentBlock(args.data.ticket_id,args.data.product);
-        const [childBlock, noteId] = payloadUtils.childBlock(args.data.noteTitle);
+        const childBlock = payloadUtils.childBlock(args.data.noteTitle);
         const body = { ...parentBlock, ...childBlock };
         payloadUtils.appendBlock(body, args);
 
@@ -26,7 +26,7 @@ exports = {
 
             const ticket = args.data.ticket;
             ticket.PageId = pageId;
-            ticket.Notes[noteId] = blockIds;
+            ticket.Notes = ticket.Notes.concat(blockIds);
             ticket.url = url;
 
             await $db.update(`ticket-${args.data.ticket_id} (${args.data.product})`, 'set', { ticket }, { setIf: "exist" });
@@ -42,7 +42,7 @@ exports = {
 
     appendNote: async function (args) {
         const pageId = await $db.get(`ticket-${args.data.ticket_id} (${args.data.product})`);
-        const [childBlock, noteId] = payloadUtils.childBlock(args.data.noteTitle);
+        const childBlock = payloadUtils.childBlock(args.data.noteTitle);
 
         payloadUtils.appendBlock(childBlock, args);
 
@@ -53,8 +53,10 @@ exports = {
             });
             const blockIds = utils.returnBlockIds(results);
 
-            let note = "ticket.Notes."+noteId;
-            await $db.update(`ticket-${args.data.ticket_id} (${args.data.product})`, 'set', { [note]: blockIds }, { setIf: "exist" });
+            let note = "ticket.Notes.";
+            let notes = pageId["ticket"]["Notes"];
+            notes = notes.concat(blockIds);
+            await $db.update(`ticket-${args.data.ticket_id} (${args.data.product})`, 'set', { [note]: notes }, { setIf: "exist" });
             console.log('DB updated successfully');
             renderData(null, 'Note added successfully!');
         } catch (error) {

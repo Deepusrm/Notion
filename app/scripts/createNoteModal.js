@@ -30,7 +30,7 @@ async function createNote() {
 
     let ticket = {
         "PageId": "",
-        "Notes": {},
+        "Notes": [],
         "url": ""
     }
 

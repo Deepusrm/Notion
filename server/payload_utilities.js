@@ -21,23 +21,10 @@ exports.parentBlock = function (id,product) {
 }
 
 exports.childBlock = function (title) {
-    let noteId = utils.generateNoteId();
+    // let noteId = utils.generateNoteId();
 
     const childJSON = {
-        children: [{
-            object: "block",
-            type: "paragraph",
-            paragraph: {
-                rich_text: [{
-                    text: {
-                        content: `note id :${noteId}`
-                    },
-                    annotations: {
-                        color: "gray"
-                    }
-                }]
-            }
-        },
+        children: [
         {
             object: "block",
             type: "heading_3",
@@ -51,7 +38,7 @@ exports.childBlock = function (title) {
         }]
     }
 
-    return [childJSON, noteId]
+    return childJSON;
 }
 
 exports.appendBlock = function (body, args) {
