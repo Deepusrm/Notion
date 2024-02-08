@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     await viewNotes();
+    deleteNote();
 })
 
 async function viewNotes() {
@@ -39,8 +40,9 @@ async function viewNotes() {
     noteData.response.forEach((element) => {
         let content = document.createElement('div');
         content.className = "content";
-        const button = `<fw-button color="secondary" size="icon">
-            <fw-icon slot="before-label" size="16" name="delete" data-block-id="${element.id}"></fw-icon>
+        content.setAttribute('data-id',element.id)
+        let button = `<fw-button color="secondary" size="icon" class = "deleteButton">
+            <fw-icon size="16" name="delete" ></fw-icon>
           </fw-button>`;
         if (element.type === 'heading_3') {
             const heading_3 = `<div class="fw-type-h3">${element.content}</div><br>`;
@@ -52,11 +54,11 @@ async function viewNotes() {
         } else if (element.type === 'to_do') {
             const todo = `<fw-checkbox>${element.content}</fw-checkbox> <br><br>`;
             content.insertAdjacentHTML('beforeend', todo);
-            content.insertAdjacentHTML('beforeend',button);
+            content.insertAdjacentHTML('beforeend', button);
         } else if (element.type === 'numbered_list_item') {
             const list = `<li>${element.content}</li>`
             content.insertAdjacentHTML('beforeend', list);
-            content.insertAdjacentHTML('beforeend',button);
+            content.insertAdjacentHTML('beforeend', button);
         } else if (element.type === 'divider') {
             const horizontal_line = document.createElement('hr');
             content.appendChild(horizontal_line);
@@ -67,4 +69,22 @@ async function viewNotes() {
 
     document.getElementById('loader').style.display = 'none';
     console.log('Note uploaded successfully');
+}
+
+function deleteNote() {
+    console.log("delete function entered");
+    const buttons = document.querySelectorAll('.deleteButton');
+    let i = 1;
+    buttons.forEach((button) => {
+        button.addEventListener('click', function(event) {
+            const blockId = event.currentTarget.parentNode.getAttribute('data-id');
+            if(blockId){
+                console.log(blockId);
+            }
+            else{
+                console.log("Button number : "+i);
+            }
+            i+=1;
+        })
+    })
 }
