@@ -61,7 +61,7 @@ async function viewNotes() {
             content.insertAdjacentHTML('beforeend', button);
         } else if (element.type === 'divider') {
             const horizontal_line = document.createElement('hr');
-            content.appendChild(horizontal_line);
+            noteContainer.appendChild(horizontal_line);
         }
 
         noteContainer.appendChild(content);
@@ -70,21 +70,44 @@ async function viewNotes() {
     document.getElementById('loader').style.display = 'none';
     console.log('Note uploaded successfully');
 }
+let ticketData;
+let ticket_id;
+async function deleteNote() {
 
-function deleteNote() {
+    if (product === 'freshdesk') {
+        ticketData = await client.data.get('ticket');
+        console.log(ticketData);
+        ticket_id = ticketData.ticket.id;
+    } else if (product === 'freshservice') {
+        ticketData = await client.data.get('ticket');
+        console.log(ticketData);
+        ticket_id = ticketData.ticket.display_id;
+    }
     console.log("delete function entered");
     const buttons = document.querySelectorAll('.deleteButton');
-    let i = 1;
+
+    const ticket = await client.db.get(`ticket-${ticket_id} (${product})`);
+    let notes = ticket.ticket.Notes;
+    console.log(notes);
     buttons.forEach((button) => {
-        button.addEventListener('click', function(event) {
+        button.addEventListener('click', async (event)=> {
             const blockId = event.currentTarget.parentNode.getAttribute('data-id');
             if(blockId){
+                notes = notes.filter((id) => id!== blockId);
                 console.log(blockId);
+                console.log(notes);
+                const response = await client.request.invoke('deleteNote',{block_id : blockId , blockIds : notes , ticketId:`ticket-${ticket_id} (${product})`});
+                if(response.response === 'Note deleted successfully!'){
+                    const parentDiv = button.parentElement;
+                    parentDiv.classList.add('slide-up-fade-out');
+                    setTimeout(() =>{
+                        parentDiv.remove();
+                    },300);
+                }
             }
             else{
                 console.log("Button number : "+i);
             }
-            i+=1;
         })
     })
 }

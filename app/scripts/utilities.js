@@ -34,3 +34,8 @@ async function showToast(message, type) {
     toast.type = type;
     toast.trigger();
 }
+
+function removeBlock(blockids, id){
+    blockids.filter((element) => element!== id);
+    return blockids;
+}

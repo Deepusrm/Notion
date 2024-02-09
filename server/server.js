@@ -120,5 +120,19 @@ exports = {
             const customError = new Error(error.message);
             renderData(customError,null);
         }
+    },
+
+    deleteNote: async function (args){
+        try {
+            await $request.invokeTemplate('deleteBlock',{
+                context:{block_id:args.block_id}
+            })
+    
+            let path = "ticket.Notes";
+            $db.update(args.ticketId,"set",{[path]:args.blockIds},{setIf:"exist"});
+            renderData(null,"Note deleted successfully!");   
+        } catch (error) {
+            renderData(error,null);
+        }
     }
 }
