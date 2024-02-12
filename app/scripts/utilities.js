@@ -81,6 +81,7 @@ async function enableFields(){
     document.getElementById('edit').style.display = "none";
     document.getElementById('noteDetails').insertAdjacentHTML('beforeend',buttonGroup);
     
+    document.getElementById('update').addEventListener('click',handleEdit);
     document.getElementById('back').addEventListener('click',disableFields);
 }
 
@@ -127,32 +128,67 @@ function getClass(element){
 
     return className;
 }
-async function updateNotes(serverNotesResponse,clientNotes){
+async function getEditedNotes(serverNotesResponse,clientNotes){
+
+    console.log("getEditedNotes function entered");
+    const editedNotes = [];
     const headings = serverNotesResponse.filter((element) => element.type === 'heading_3');
     const todos = serverNotesResponse.filter((element) => element.type === 'to_do');
     const paras = serverNotesResponse.filter((element) => element.type === 'paragraph');
     const lists = serverNotesResponse.filter((element) => element.type === 'numbered_list_item');
 
-    let response;
-    if(serverNotesResponse.length === clientNotes.length){
+    const clientNotesLength = clientNotes["headings"].length + clientNotes["paragraphs"].length + clientNotes["checkboxes"].length + clientNotes["lists"].length;
+    console.log(serverNotesResponse.length +" - server side response");
+    console.log(clientNotesLength + " - Client side response");
+    if(serverNotesResponse.length === clientNotesLength){
         for(let i=0 ;i<clientNotes["headings"].length;i++){
             if(headings[i]["content"] !== clientNotes["headings"][i]["content"]){
-                try {
-                    response = await client.request.invoke('updateNote',{data:clientNotes["headings"][i]});
-                    console.log("Success : heading - "+i);  
-                } catch (error) {
-                    console.error(error);
-                }
+                console.log('heading matched!');
+                editedNotes.push(clientNotes["headings"][i]);
             }
         }
 
-        for(let j=0; j<clientNotes["checkboxes"];j++){
-            try {
-                response = await client.request.invoke('updateNote',{data:clientNotes["checkboxes"][j]});
-                console.log("Success : to do - "+j);
-            } catch (error) {
-                console.error(error);
+        for(let j=0; j<clientNotes["checkboxes"].length;j++){
+            let isContentNotMatched = todos[j]["content"] !== clientNotes["checkboxes"][j]["content"];
+            let isChecked = todos[j]["checked"] !== clientNotes["checkboxes"][j]["isChecked"];
+            if((isContentNotMatched && isChecked) || (isContentNotMatched || isChecked)){
+                console.log('todos matched!');
+                editedNotes.push(clientNotes["checkboxes"][j]);
+            }
+        }
+
+        for (let k = 0; k < clientNotes["lists"].length; k++) {
+            if(lists[k]["content"] !== clientNotes["lists"][k]["content"]){
+                editedNotes.push(clientNotes["lists"][k]);
+            }
+        }
+
+        for (let l = 0; l < clientNotes["paragraphs"].length; l++) {
+            if(paras[l]["content"] !== clientNotes["paragraphs"][l]["content"]){
+                editedNotes.push(clientNotes["lists"][l]);
             }
         }
     }
+
+    console.log(editedNotes);
+    return editedNotes;
+}
+
+async function refresh(){
+    const content = Array.from(document.getElementsByClassName('content'));
+    content.forEach((element)=>{
+        element.remove();
+    })
+
+    const lines = Array.from(document.getElementsByTagName('hr'));
+    lines.forEach((element)=>{
+        element.remove();
+    })
+
+    const buttons = Array.from(document.getElementsByTagName('fw-button-group'));
+    buttons.forEach((element)=>{
+        element.remove();
+    })
+    
+    await viewNotes();
 }

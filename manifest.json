@@ -22,6 +22,9 @@
         },
         "deleteNote":{
           "timeout":20
+        },
+        "updateNote":{
+          "timeout":20
         }
       }
     },

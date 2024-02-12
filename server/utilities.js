@@ -39,42 +39,76 @@ exports.returnNoteData = async function(payload){
         const note = {
             "type":"",
             "content":"",
-            "id":""
+            "id":"",
+            "checked":false
         }
         if(element['type'] === 'heading_3'){
             note.type = 'heading_3';
             note.id = element.id;
             note.content = element['heading_3']['rich_text'][0]['text']['content'];
-
+            note.checked = false;
+            // console.log("done - heading")
             noteData.push(note);
         }else if(element['type'] === 'paragraph'){
-            if(!element['paragraph']['rich_text'][0]['text']['content'].startsWith('note id :')){
                 note.type = 'paragraph';
                 note.id = element.id;
                 note.content = element['paragraph']['rich_text'][0]['text']['content'];
-
+                note.checked = false;
+                // console.log("done - paragraph")
                 noteData.push(note);
-            }
         }else if(element['type'] === 'to_do'){
             note.type = 'to_do';
             note.id = element.id;
             note.content = element['to_do']['rich_text'][0]['text']['content'];
-
+            note.checked = element['to_do']['checked'];
+            // console.log("done - todo")
             noteData.push(note);
         }else if(element['type'] === 'numbered_list_item'){
             note.type = 'numbered_list_item';
             note.id = element.id;
             note.content = element['numbered_list_item']['rich_text'][0]['text']['content'];
-
+            note.checked = false;
+            // console.log("done - list")
             noteData.push(note);
         }else if(element['type'] === 'divider'){
             note.type = 'divider';
             note.id = element.id;
             note.content = null;
-
+            note.checked = false;
+            // console.log("done - divider")
             noteData.push(note);
         }
     })
 
     return noteData;
+}
+
+
+exports.getObject = function(data){
+    return {
+        object:"block",
+        type:data["type"],
+        [data["type"]]:{
+            "rich_text":[{
+                text:{
+                    content:data["content"]
+                }
+            }]
+        }
+    }
+}
+
+exports.getTodoObject = function(data){
+    return {
+        object:"block",
+        type:data["type"],
+        [data["type"]]:{
+            rich_text:[{
+                text:{
+                    content:data["content"]
+                }
+            }],
+            checked:data["isChecked"]
+        }
+    }
 }

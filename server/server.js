@@ -2,7 +2,7 @@ const payloadUtils = require('./payload_utilities');
 const utils = require('./utilities');
 exports = {
     createNote: async function (args) {
-        const parentBlock = payloadUtils.parentBlock(args.data.ticket_id,args.data.product);
+        const parentBlock = payloadUtils.parentBlock(args.data.ticket_id, args.data.product);
         const childBlock = payloadUtils.childBlock(args.data.noteTitle);
         const body = { ...parentBlock, ...childBlock };
         payloadUtils.appendBlock(body, args);
@@ -66,41 +66,6 @@ exports = {
         }
 
     },
-
-
-    // deleteNote: async function (args) {
-    //     console.log('delete function entered')
-    //     try {
-    //         const ticket = await $db.get(`ticket-${args.ticketId} (${args.product_name})`);
-    //         console.log(ticket);
-    //         const noteId = args.note_id;
-    //         console.log(noteId)
-    //         const noteBlocks = ticket.ticket["Notes"][noteId];
-
-    //         console.log(noteBlocks);
-    //         if (!Array.isArray(noteBlocks)) {
-    //             renderData(null, "Note doesn't exist");
-    //             return;
-    //         }
-
-    //         for (const block of noteBlocks) {
-    //             await $request.invokeTemplate('deleteBlock', {
-    //                 context: { block_id: block }
-    //             })
-    //         }
-    //         console.log("Note deleted successfully!");
-    //         const notePath = "ticket.Notes." + args.note_id;
-    //         await $db.update(`ticket-${args.ticketId} (${args.product_name})`, "remove", [notePath], { setIf: "exist" });
-    //         console.log("Note removed successfully from the db");
-    //         renderData(null, 'Note deleted successfully!');
-    //     } catch (error) {
-    //         console.error(error);
-    //         const customError = new Error(error.message, null);
-    //         renderData(customError, null);
-    //     }
-
-    // },
-
     getNotes: async function (args) {
         try {
             const ticket = await $db.get(`ticket-${args.id} (${args.product_name})`);
@@ -118,19 +83,43 @@ exports = {
         } catch (error) {
             console.error(error);
             const customError = new Error(error.message);
-            renderData(customError,null);
+            renderData(customError, null);
         }
     },
 
-    deleteNote: async function (args){
+    deleteNote: async function (args) {
         try {
-            await $request.invokeTemplate('deleteBlock',{
-                context:{block_id:args.block_id}
+            await $request.invokeTemplate('deleteBlock', {
+                context: { block_id: args.block_id }
             })
-    
+
             let path = "ticket.Notes";
-            $db.update(args.ticketId,"set",{[path]:args.blockIds},{setIf:"exist"});
-            renderData(null,"Note deleted successfully!");   
+            $db.update(args.ticketId, "set", { [path]: args.blockIds }, { setIf: "exist" });
+            renderData(null, "Note deleted successfully!");
+        } catch (error) {
+            renderData(error, null);
+        }
+    },
+
+    updateNote: async function (data) {
+        // const dataToBeUpdated = data.editedNotes;
+
+        let bodyJSON;
+        try {
+            if (data.element["type"] === 'to_do') {
+                bodyJSON = utils.getTodoObject(data.element);
+                await $request.invokeTemplate('updateBlock', {
+                    context: { block_id: data.element["blockId"] },
+                    body: JSON.stringify(bodyJSON)
+                })
+            } else {
+                bodyJSON = utils.getObject(data.element);
+                await $request.invokeTemplate('updateBlock', {
+                    context: { block_id: data.element["blockId"] },
+                    body: JSON.stringify(bodyJSON)
+                })
+            }
+            renderData(null,"Note updated successfully");
         } catch (error) {
             renderData(error,null);
         }

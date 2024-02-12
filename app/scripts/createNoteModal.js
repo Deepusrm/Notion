@@ -55,6 +55,9 @@ async function createNote() {
             document.getElementById('loader').style.display = "none";
             console.log('Sorry ' + responseData.response);
         }
+        setTimeout(()=>{
+            client.instance.close();
+        },1000);
     } catch (error) {
         if (error.message === 'The setIf conditional request failed') {
             try {
@@ -64,6 +67,7 @@ async function createNote() {
                 if (responseData.response === 'Note added successfully!') {
                     showToast(responseData.response, 'success');
                     document.getElementById('loader').style.display = "none";
+                    // await showNotifications(responseData.response,'success');
                     console.log('Success ' + responseData.response);
                 } else {
                     showToast(responseData.response, 'error');
@@ -75,11 +79,15 @@ async function createNote() {
                 showToast(error.message, 'error');
                 document.getElementById('loader').style.display = "none";
             }
+            setTimeout(()=>{
+                client.instance.close();
+            },1000);
 
         } else {
             showToast(error.message, 'error');
             document.getElementById('loader').style.display = "none";
             console.error(error);
+            await client.instance.close();
         }
     }
 

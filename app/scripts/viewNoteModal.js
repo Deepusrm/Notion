@@ -1,5 +1,6 @@
 let product;
 let noteData;
+let client;
 document.addEventListener('DOMContentLoaded', async () => {
     client = await app.initialized();
     product = await client.context.product;
@@ -30,45 +31,14 @@ async function viewNotes() {
             showToast("No notes for this ticket, please create a new one", 'error');
         throw error;
     }
-    const noteContainer = document.getElementById('noteDetails');
     console.log(noteData.response);
 
     if (!noteData.response) {
         document.getElementById('loader').style.display = 'none';
         showToast('Page is empty! please add a note!', 'error');
+    }else{
+        appendNoteContent(noteData.response);
     }
-    noteData.response.forEach((element) => {
-        let content = document.createElement('div');
-        content.className = "content";
-        content.setAttribute('data-id',element.id)
-        let button = `<fw-button color="secondary" size="icon" class = "deleteButton">
-            <fw-icon size="16" name="delete" ></fw-icon>
-          </fw-button>`;
-        if (element.type === 'heading_3') {
-            const heading_3 = `<div class="fw-type-h3">${element.content}</div><br>`;
-            content.insertAdjacentHTML('beforeend', heading_3);
-        } else if (element.type === 'paragraph') {
-            const paragraph = `<p class="fw-text-normal">${element.content}</p>`;
-            content.insertAdjacentHTML('beforeend', paragraph);
-            content.insertAdjacentHTML('beforeend', button);
-        } else if (element.type === 'to_do') {
-            const todo = `<fw-checkbox disabled="true"><span class="todo">${element.content}</span></fw-checkbox><br><br>`;
-            content.insertAdjacentHTML('beforeend', todo);
-            content.insertAdjacentHTML('beforeend', button);
-        } else if (element.type === 'numbered_list_item') {
-            const list = `<li>${element.content}</li>`
-            content.insertAdjacentHTML('beforeend', list);
-            content.insertAdjacentHTML('beforeend', button);
-        } else if (element.type === 'divider') {
-            const horizontal_line = document.createElement('hr');
-            noteContainer.appendChild(horizontal_line);
-        }
-
-        noteContainer.appendChild(content);
-    });
-
-    const editButton = `<fw-button color="primary" id="edit">Edit</fw-button>`;
-    noteContainer.insertAdjacentHTML('beforeend',editButton);
 
     document.getElementById('loader').style.display = 'none';
     console.log('Note uploaded successfully');
@@ -95,8 +65,7 @@ async function deleteNote() {
 
     const ticket = await client.db.get(`ticket-${ticket_id} (${product})`);
     let notes = ticket.ticket.Notes;
-    console.log(notes);
-    buttons.forEach((button) => {
+    buttons.forEach(async (button) => {
         button.addEventListener('click', async (event)=> {
             const blockId = event.currentTarget.parentNode.getAttribute('data-id');
             if(blockId){
@@ -112,12 +81,16 @@ async function deleteNote() {
                     },300);
                 }
             }
+            noteData = await client.request.invoke('getNotes',{ id: ticket_id, product_name: product });
+            console.log(noteData);
         })
     })
+
 }
 
-const updateButton = document.getElementById('update');
-updateButton.addEventListener('click', async ()=>{
+async function handleEdit(){
+    document.getElementById('loader').style.display = "block";
+    let editedNotes = [];
     const editableElements = Array.from(document.querySelectorAll('[contenteditable=true]'));
 
     const headings = [];
@@ -133,6 +106,7 @@ updateButton.addEventListener('click', async ()=>{
     const checkboxes = [];
     editableElements.filter((element) => getClass(element) === 'todo').forEach((element) =>{
         const isChecked = element.parentElement.checked;
+        console.log(isChecked);
         checkboxes.push({
             "type":"to_do",
             "content":element.innerHTML,
@@ -162,7 +136,22 @@ updateButton.addEventListener('click', async ()=>{
     })
 
     const editedElements = {"headings":headings,"paragraphs":paragraphs,"checkboxes":checkboxes,"lists":lists};
-    const notes = noteData.filter((element) => element.type !== 'divider');
+    const notes = noteData.response.filter((element) => element.type !== 'divider');
 
-    await updateNotes(notes,editedElements);
-});
+    editedNotes = await getEditedNotes(notes,editedElements);
+
+    if(editedNotes){
+        editedNotes.forEach(async (element) =>{
+            try {
+                const response = await client.request.invoke('updateNote',{element}); 
+                console.log(response.response);
+            } catch (error) {
+                console.error(error);
+            }
+        })
+    }
+
+    document.getElementById('loader').style.display = "none";
+    showToast('Note updated successfully!','success');
+    await refresh();
+}
