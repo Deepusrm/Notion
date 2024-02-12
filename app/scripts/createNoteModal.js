@@ -81,7 +81,7 @@ async function createNote() {
             }
             setTimeout(()=>{
                 client.instance.close();
-            },1000);
+            },2000);
 
         } else {
             showToast(error.message, 'error');

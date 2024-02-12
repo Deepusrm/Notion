@@ -82,8 +82,7 @@ exports = {
 
         } catch (error) {
             console.error(error);
-            const customError = new Error(error.message);
-            renderData(customError, null);
+            renderData(error, null);
         }
     },
 
