@@ -34,7 +34,7 @@ async function createNote() {
         "url": ""
     }
 
-    let params = { ...note, ticket, ticket_id ,product}
+    let params = { ...note, ticket, ticket_id, product }
 
     try {
         await client.db.set(`ticket-${ticket_id} (${product})`, { ticket }, { setIf: "not_exist" });
@@ -42,22 +42,10 @@ async function createNote() {
 
         document.getElementById('loader').style.display = "none";
         resetForm();
-        if (responseData.response === "Note created successfully!") {
-
-            showToast(responseData.response, 'success');
-            document.getElementById('loader').style.display = "none";
-            resetForm();
-            // await showNotifications(responseData.response,'success');
-            console.log('Success ' + responseData.response);
-        } else {
-            // await showNotifications(responseData.response,'danger');
-            showToast(responseData.response, 'error');
-            document.getElementById('loader').style.display = "none";
-            console.log('Sorry ' + responseData.response);
-        }
-        setTimeout(()=>{
+        showToast(responseData.response, 'success');
+        setTimeout(() => {
             client.instance.close();
-        },1000);
+        }, 1000);
     } catch (error) {
         if (error.message === 'The setIf conditional request failed') {
             try {
@@ -66,28 +54,15 @@ async function createNote() {
                 resetForm();
                 if (responseData.response === 'Note added successfully!') {
                     showToast(responseData.response, 'success');
-                    document.getElementById('loader').style.display = "none";
-                    // await showNotifications(responseData.response,'success');
-                    console.log('Success ' + responseData.response);
-                } else {
-                    showToast(responseData.response, 'error');
-                    document.getElementById('loader').style.display = "none";
-                    console.log('Sorry ' + responseData.response);
                 }
             } catch (error) {
                 console.error(error);
                 showToast(error.message, 'error');
-                document.getElementById('loader').style.display = "none";
             }
-            setTimeout(()=>{
+            setTimeout(() => {
                 client.instance.close();
-            },2000);
+            }, 2000);
 
-        } else {
-            showToast(error.message, 'error');
-            document.getElementById('loader').style.display = "none";
-            console.error(error);
-            await client.instance.close();
         }
     }
 
