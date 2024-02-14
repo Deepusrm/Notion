@@ -1,14 +1,19 @@
-exports.generateNoteId = function generateNoteId() {
-    let id = '';
-    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+// exports.returnPageIdFromURL = async (url)=>{
+//     let urlPathArray = url.split('?');
+//     if(url.includes('-')){
+//         urlPathArray = (urlPathArray.join()).split('-');
+//     }else if(url.includes('/')){
+//         urlPathArray = (urlPathArray.join()).split('/');
+//     }
+//     console.log(urlPathArray);
+//     urlPathArray.pop();
+    
+//     console.log(urlPathArray);
+//     const page_id = urlPathArray[urlPathArray.length - 1];
+//     console.log(page_id);
 
-    for (let i = 0; i < 6; i++) {
-        id += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    console.log(id);
-    return id;
-}
-
+//     return page_id;
+// }
 exports.returnPageIdOnCreatingNote = async function(bodyParam){
     const responseData = await $request.invokeTemplate("createPage",{
         context:{},
