@@ -6,11 +6,7 @@ exports.returnPageIdFromURL = async (url)=>{
     }else if(url.includes('/')){
         urlPathArray = (urlPathArray.join()).split('/');
     }
-    console.log(urlPathArray);
-    
-    console.log(urlPathArray);
     const page_id = urlPathArray[urlPathArray.length - 1];
-    console.log(page_id);
 
     return page_id;
 }

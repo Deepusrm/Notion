@@ -2,7 +2,6 @@ const payloadUtils = require('./payload_utilities');
 const utils = require('./utilities');
 exports = {
     onAppInstallHandler: async function(args){
-        console.log(args);
         const url = args.iparams.notion_page_url;
         const pageId = await utils.returnPageIdFromURL(url);
         let iparamdbname = args.iparams.notion_database_name ;
