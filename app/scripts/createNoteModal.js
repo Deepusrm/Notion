@@ -1,4 +1,7 @@
 let product;
+let notion_database;
+let database_id;
+
 document.addEventListener('DOMContentLoaded', async () => {
     client = await app.initialized();
     product = await client.context.product;
@@ -20,6 +23,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
 
 async function createNote() {
+    notion_database = await client.db.get("notion_app_iparams");
+    database_id = notion_database["database_id"];
+    console.log(database_id);
     document.getElementById('loader').style.display = "block";
 
     const noteType = +document.getElementById('noteType').value;
@@ -34,7 +40,7 @@ async function createNote() {
         "url": ""
     }
 
-    let params = { ...note, ticket, ticket_id, product }
+    let params = { ...note, ticket, ticket_id, product, database_id }
 
     try {
         await client.db.set(`ticket-${ticket_id} (${product})`, { ticket }, { setIf: "not_exist" });

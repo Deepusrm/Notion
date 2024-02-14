@@ -3,8 +3,12 @@
   "modules": {
     "common": {
       "events":{
+        "onAppInstall":{
+          "handler":"onAppInstallHandler"
+        }
       },
       "requests": {
+        "createDataBase":{},
         "createPage": {},
         "appendToExistingPage":{},
         "getPageBlocks":{},

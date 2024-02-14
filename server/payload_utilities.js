@@ -1,9 +1,9 @@
 const utils = require('./utilities');
-exports.parentBlock = function (id,product) {
+exports.parentBlock = function (id,product,databaseId) {
     const parentJSON = {
         parent: {
             type: "database_id",
-            database_id: "<%=iparam.notion_database%>"
+            database_id: databaseId
         },
         properties: {
             Name: {

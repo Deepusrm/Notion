@@ -1,19 +1,19 @@
-// exports.returnPageIdFromURL = async (url)=>{
-//     let urlPathArray = url.split('?');
-//     if(url.includes('-')){
-//         urlPathArray = (urlPathArray.join()).split('-');
-//     }else if(url.includes('/')){
-//         urlPathArray = (urlPathArray.join()).split('/');
-//     }
-//     console.log(urlPathArray);
-//     urlPathArray.pop();
+exports.returnPageIdFromURL = async (url)=>{
+    let urlPathArray = url.split('?');
+    urlPathArray.pop();
+    if(url.includes('-')){
+        urlPathArray = (urlPathArray.join()).split('-');
+    }else if(url.includes('/')){
+        urlPathArray = (urlPathArray.join()).split('/');
+    }
+    console.log(urlPathArray);
     
-//     console.log(urlPathArray);
-//     const page_id = urlPathArray[urlPathArray.length - 1];
-//     console.log(page_id);
+    console.log(urlPathArray);
+    const page_id = urlPathArray[urlPathArray.length - 1];
+    console.log(page_id);
 
-//     return page_id;
-// }
+    return page_id;
+}
 exports.returnPageIdOnCreatingNote = async function(bodyParam){
     const responseData = await $request.invokeTemplate("createPage",{
         context:{},

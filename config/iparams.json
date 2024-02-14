@@ -4,16 +4,27 @@
     "description": "Please enter your api_key",
     "type": "text",
     "required": true,
+    "secure":true,
     "modules": [
       "support_ticket",
       "service_ticket"
     ]
   },
-  "notion_database":{
-    "display_name":"notion_database",
-    "description":"enter the database id",
-    "type":"text",
+  "notion_page_url":{
+    "display_name":"notion_page_url",
+    "description":"Enter the page url (Make sure to add integration to this page)",
+    "type":"url",
     "required":true,
+    "modules":[
+      "service_ticket",
+      "support_ticket"
+    ]
+  },
+  "notion_database_name":{
+    "display_name":"notion_database_name",
+    "description":"Name the database you want to create",
+    "type":"text",
+    "required":false,
     "modules":[
       "support_ticket",
       "service_ticket"

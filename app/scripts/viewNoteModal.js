@@ -26,9 +26,10 @@ async function viewNotes() {
     try {
         noteData = await client.request.invoke('getNotes', { id: ticket_id, product_name: product });
     } catch (error) {
-        const errorMessage = JSON.parse(error.response).message;
+        console.error(error);
+        // const errorMessage = JSON.parse(error.response).message;
         document.getElementById('loader').style.display = 'none';
-        if (errorMessage === 'Record not found'){
+        if (error.message === 'Record not found'){
             showToast("No notes for this ticket, please create a new one", 'error');
             setTimeout(()=>{
                 client.instance.close();

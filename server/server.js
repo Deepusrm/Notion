@@ -1,42 +1,46 @@
 const payloadUtils = require('./payload_utilities');
 const utils = require('./utilities');
 exports = {
-    // onAppInstallHandler: async function(args){
-    //     console.log(args);
-    //     const url = args.iparams.notion_page_url;
-    //     const pageId = await utils.returnPageIdFromURL(url);
-    //     let iparamdbname = args.iparams.notion_database_name ;
-    //     let dbName = iparamdbname? iparamdbname : "FRESHWORKS TICKETS";
-    //     try {
-    //         await $db.set(`notion_app_iparams`,{"page_id":pageId,"database_id":""},{setIf:"not_exist"});
-    //         const response = await $request.invokeTemplate('createDataBase',{
-    //             context:{},
-    //             body:JSON.stringify({
-    //                 parent:{
-    //                     type:"page_id",
-    //                     page_id:pageId
-    //                 },
-    //                 title:[{
-    //                     type:"text",
-    //                     text:{
-    //                         content:dbName
-    //                     }
-    //                 }],
-    //                 properties: {
-    //                     Name: {
-    //                         title: {}
-    //                     }
-    //                 }
-    //             })
-    //         })
-    //         console.log(response);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    //     renderData(null, "Dummy content");
-    // },
+    onAppInstallHandler: async function(args){
+        console.log(args);
+        const url = args.iparams.notion_page_url;
+        const pageId = await utils.returnPageIdFromURL(url);
+        let iparamdbname = args.iparams.notion_database_name ;
+        let dbName = iparamdbname? iparamdbname : "FRESHWORKS TICKETS";
+        try {
+            await $db.set(`notion_app_iparams`,{"page_id":pageId,"database_id":""},{setIf:"not_exist"});
+            const response = await $request.invokeTemplate('createDataBase',{
+                context:{},
+                body:JSON.stringify({
+                    parent:{
+                        type:"page_id",
+                        page_id:pageId
+                    },
+                    title:[{
+                        type:"text",
+                        text:{
+                            content:dbName
+                        }
+                    }],
+                    properties: {
+                        Name: {
+                            title: {}
+                        }
+                    }
+                })
+            })
+            const dbId = JSON.parse(response.response).id;
+            console.log(dbId);
+
+            await $db.update(`notion_app_iparams`,"set",{"page_id":pageId,"database_id":dbId},{setIf:"exist"});
+            console.log("DB updated successfully");
+        } catch (error) {
+            console.log(error);
+        }
+        renderData(null, "Dummy content");
+    },
     createNote: async function (args) {
-        const parentBlock = payloadUtils.parentBlock(args.data.ticket_id, args.data.product);
+        const parentBlock = payloadUtils.parentBlock(args.data.ticket_id, args.data.product, args.data.database_id);
         const childBlock = payloadUtils.childBlock(args.data.noteTitle);
         const body = { ...parentBlock, ...childBlock };
         payloadUtils.appendBlock(body, args);
